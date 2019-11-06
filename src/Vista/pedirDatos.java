@@ -5,15 +5,24 @@
  */
 package Vista;
 
+import Controlador.Conexion;
+import Controlador.Errores;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
 /**
  *
  * @author alumno
  */
 public class pedirDatos extends javax.swing.JDialog {
 
-    /**
-     * Creates new form pedirDatos
-     */
+    private boolean correcto=false;
+    
     public pedirDatos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -39,8 +48,6 @@ public class pedirDatos extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel2.setText("Contraseña:");
 
-        jPasswordField1.setText("jPasswordField1");
-
         botonCancelar.setText("Cancelar");
         botonCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -49,6 +56,11 @@ public class pedirDatos extends javax.swing.JDialog {
         });
 
         botonAceptar.setText("Aceptar");
+        botonAceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonAceptarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -69,7 +81,7 @@ public class pedirDatos extends javax.swing.JDialog {
                         .addComponent(botonCancelar)
                         .addGap(52, 52, 52)
                         .addComponent(botonAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -82,7 +94,7 @@ public class pedirDatos extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonCancelar)
                     .addComponent(botonAceptar))
@@ -96,7 +108,44 @@ public class pedirDatos extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_botonCancelarActionPerformed
 
+    private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
+        
+        String user, pass;
+        
+        user =jTextField1.getText();
+        pass = jPasswordField1.getText();
+        Conexion nueva = new Conexion();
+        
+        try {
+            correcto=nueva.validarUsuario(user, pass);
+            
+            if (correcto){
+                JOptionPane.showMessageDialog(null, "Conexion realizada con exito", "Todo bien", JOptionPane.INFORMATION_MESSAGE);
+           }     
+        } catch (Errores ex) {
+            JOptionPane.showMessageDialog(null, "Conexion rechazada", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.lanzarMensaje();
+        }
 
+        dispose();
+        
+    }//GEN-LAST:event_botonAceptarActionPerformed
+
+    public String devolverUserOPass(int cual)
+    {
+        if (cual==1)
+            return jTextField1.getText();
+        else
+            return jPasswordField1.getText();
+    }
+    
+
+    
+    public boolean estadoConexion()
+    {
+        return correcto;
+    }
+    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

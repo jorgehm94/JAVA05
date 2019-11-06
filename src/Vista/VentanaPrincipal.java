@@ -2,8 +2,12 @@
 
 package Vista;
 
+import Controlador.Errores;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -15,18 +19,43 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     public VentanaPrincipal() {
         initComponents();
         
+        // Desactivo el usuario el cual está conectado
+        labelUsuario.setEnabled(false);
+        
         try{
             JFrame.setDefaultLookAndFeelDecorated(true);
             JDialog.setDefaultLookAndFeelDecorated(true);
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
             //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-           // UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
           }
           catch (Exception e)
           {
                e.printStackTrace();
           }
+        
+        
+        pedirDatos datos = new pedirDatos(this, true);
+        
+        datos.setVisible(true);
+        
+        if(datos.estadoConexion())
+        {
+            itemCerrarr.setEnabled(true);
+            itemConexion.setEnabled(false);
+            String usuario = datos.devolverUserOPass(1);
+            labelUsuario.setEnabled(true);
+            labelUsuario.setText("PINACOTECA: "+usuario);
+            
+        }
+        else
+        {
+            labelUsuario.setEnabled(false);
+            itemCerrarr.setEnabled(false);
+            itemConexion.setEnabled(true);
+        }
+ 
     }
 
     @SuppressWarnings("unchecked")
@@ -39,11 +68,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jMenuBar3 = new javax.swing.JMenuBar();
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
+        labelUsuario = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuSuperior = new javax.swing.JMenu();
         itemConexion = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        itemCerrarr = new javax.swing.JMenuItem();
 
         jMenu2.setText("File");
         jMenuBar2.add(jMenu2);
@@ -59,6 +89,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        labelUsuario.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        labelUsuario.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
         menuSuperior.setText("Menu");
 
         itemConexion.setText("Conexion");
@@ -72,8 +105,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jMenuItem2.setText("jMenuItem2");
         menuSuperior.add(jMenuItem2);
 
-        jMenuItem3.setText("jMenuItem3");
-        menuSuperior.add(jMenuItem3);
+        itemCerrarr.setText("Cerrar Conexion");
+        itemCerrarr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemCerrarrActionPerformed(evt);
+            }
+        });
+        menuSuperior.add(itemCerrarr);
 
         jMenuBar1.add(menuSuperior);
 
@@ -83,25 +121,56 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 469, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(105, 105, 105)
+                .addComponent(labelUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(130, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 287, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(labelUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void itemConexionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemConexionActionPerformed
+    private void itemConexionActionPerformed(java.awt.event.ActionEvent evt){//GEN-FIRST:event_itemConexionActionPerformed
         
         pedirDatos datos = new pedirDatos(this, true);
         
+        datos.setVisible(true);
+        
+        if(datos.estadoConexion())
+        {
+            itemCerrarr.setEnabled(true);
+            itemConexion.setEnabled(false);
+            
+            String usuario = datos.devolverUserOPass(1);
+            labelUsuario.setEnabled(true);
+            labelUsuario.setText("PINACOTECA: "+usuario);
+        }
+        else
+        {
+            labelUsuario.setEnabled(false);
+            itemCerrarr.setEnabled(false);
+            itemConexion.setEnabled(true);
+        }
+            
     }//GEN-LAST:event_itemConexionActionPerformed
+
+    private void itemCerrarrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCerrarrActionPerformed
+       labelUsuario.setEnabled(false);
+       itemConexion.setEnabled(true);
+       itemCerrarr.setEnabled(false);
+    }//GEN-LAST:event_itemCerrarrActionPerformed
 
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem itemCerrarr;
     private javax.swing.JMenuItem itemConexion;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -111,7 +180,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuBar jMenuBar3;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JLabel labelUsuario;
     private javax.swing.JMenu menuSuperior;
     // End of variables declaration//GEN-END:variables
 }

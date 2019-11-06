@@ -11,15 +11,18 @@ import java.sql.SQLException;
 public class Errores extends Exception{
  
     private int codigoError;
+    
     public Errores (int cod)
     {
         this.codigoError = cod;
+        
     }
     
-    private void lanzarMensaje() throws IOException
+    public void lanzarMensaje()
     {
        ErroresUnificados nuevo = new ErroresUnificados(codigoError);
-       nuevo.generarLog(codigoError);
+       nuevo.generarLog();
+       nuevo.mostrarMensajeError();
        
     }
 }

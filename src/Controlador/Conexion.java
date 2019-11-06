@@ -21,58 +21,64 @@ public class Conexion {
     public static Connection conexionPostgres;
     public static Connection conexionMysql;
 
-    public static void crearConexion(String pass) throws ClassNotFoundException, SQLException
+    public static void crearConexion(String pass) throws Errores
     {
 
-         Class.forName("org.postgresql.Driver");  //loads the driver
+         try {
+            Class.forName("org.postgresql.Driver");  //loads the driver
 
-         String url = "jdbc:postgresql://localhost:5432/PINACOTECA";
-         
-         conexionPostgres = DriverManager.getConnection(url, "jorge", pass);
-              
-         Class.forName("com.mysql.jdbc.Driver");  //loads the driver
-              
-         String urls = "jdbc:mysql://localhost:3306/PINACOTECA?useSSL=false";
-              
-         conexionMysql = DriverManager.getConnection(urls, "jorge", pass);   
-         
+            String url = "jdbc:postgresql://localhost:5432/PINACOTECA";
+            
+            conexionPostgres = DriverManager.getConnection(url, "jorge", pass);
+            
+            Class.forName("com.mysql.cj.jdbc.Driver");  //loads the driver
+            
+            String urls = "jdbc:mysql://localhost:3306/PINACOTECA?useSSL=false";
+            
+            conexionMysql = DriverManager.getConnection(urls, "jorge", pass);            
+            
+        } catch (ClassNotFoundException classNotFoundException) {
+        } catch (SQLException sQLException) {
+             throw new Errores(1);
+        }
 
     }
 
     
     
-    public boolean validarUsuario(String cod, String pass) throws SQLException, ClassNotFoundException
+    public boolean validarUsuario(String cod, String pass) throws Errores
     {
+         try {
+            Conexion.crearConexion(pass);
+
+            String consulta = "select * from PINACOTECA where COD_PINA = ? ";
         
-        crearConexion(pass);
-        
-        PreparedStatement validacion = null;
-        String consulta = "select * from pinacoteca where cod_pina = ? ";
-        ResultSet rsP;
-        ResultSet rsM;
-        
-        
-        validacion = conexionPostgres.prepareStatement(consulta, ResultSet.TYPE_SCROLL_SENSITIVE,
-          ResultSet.CONCUR_UPDATABLE);
-        
-        validacion.setInt(1, Integer.parseInt(cod));
-        
-        rsP = validacion.executeQuery();
-        
-       validacion = conexionMysql.prepareStatement(consulta, ResultSet.TYPE_SCROLL_SENSITIVE,
-          ResultSet.CONCUR_UPDATABLE);
        
-        validacion.setInt(1, Integer.parseInt(cod));
-        
-        rsM = validacion.executeQuery();
-        
-        if(rsP.next() && rsM.next()){
-            System.out.println("Todo bien");
-            return true;
-        }
-        else{
-            System.out.println("No se ha encontrado el usuario");
-            return false;
+            PreparedStatement validacion = conexionPostgres.prepareStatement(consulta, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            
+            ResultSet rsP;
+            ResultSet rsM;
+            
+            validacion.setInt(1, Integer.parseInt(cod));
+            
+            rsP = validacion.executeQuery();
+            
+            validacion = conexionMysql.prepareStatement(consulta, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            
+            validacion.setInt(1, Integer.parseInt(cod));
+            
+            rsM = validacion.executeQuery();
+            
+            if (rsP.next() && rsM.next()) {
+                return true;
+            } else {
+                throw new Errores(1);
+            }
+         }catch(NullPointerException | SQLException | NumberFormatException ex)
+        {
+            throw new Errores(1);
         }
         
     }

@@ -5,6 +5,8 @@
  */
 package Controlador;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
@@ -12,12 +14,13 @@ import java.util.GregorianCalendar;
 
 /**
  *
- * @author alumno
+ * @author JorgeHerrera
  */
 public class ErroresUnificados {
     
     private int codError;
     private static int cont = 1;
+    
     public ErroresUnificados(int cod)
     {
         this.codError = cod;
@@ -42,18 +45,45 @@ public class ErroresUnificados {
         
     }
     
-    protected void generarLog(int cod) throws IOException
+    public void mostrarMensajeError()
+    {
+        GregorianCalendar sistema = new GregorianCalendar();
+        System.out.println("Creando log "+cont+"...");
+        System.out.println("" + sistema.get(Calendar.DAY_OF_MONTH) + "/" + (sistema.get(Calendar.MONTH) + 1) + "/" + sistema.get(Calendar.YEAR) + " Hora: " + sistema.get(Calendar.HOUR) +":" + sistema.get(Calendar.MINUTE));
+    }
+    
+    public void generarLog()
+    {
+       
+        File carpeta = new File("logs/");
+
+        if (carpeta.exists())
+           crearFichero();
+        else
+        {
+            carpeta.mkdir();
+            crearFichero();
+        }
+            
+    }
+    
+    private void crearFichero()
     {
         GregorianCalendar sistema = new GregorianCalendar();
         
-        String mensaje = obtenerMensaje(cod);
+        String mensaje = obtenerMensaje(codError);
         
-        FileWriter fichero = new FileWriter("/logs/log"+cont+".txt");
-        
-        fichero.write(""+sistema.get(Calendar.DAY_OF_WEEK)+"/"+sistema.get(Calendar.MONTH)+"/"+sistema.get(Calendar.YEAR)+"Hora: "+sistema.get(Calendar.HOUR)+"\n");
-        fichero.write(mensaje+"\n");
-        cont++;
-        fichero.close();
+        try {
+            String ruta = "logs/log" + cont + ".txt";
+            BufferedWriter bw = new BufferedWriter(new FileWriter(ruta));
+            
+            bw.write("" + sistema.get(Calendar.DAY_OF_MONTH) + "/" + (sistema.get(Calendar.MONTH) + 1) + "/" + sistema.get(Calendar.YEAR) + " Hora: " + sistema.get(Calendar.HOUR) +":" + sistema.get(Calendar.MINUTE) + "\n");
+            bw.write(mensaje + "\n");
+            cont++;
+            bw.close();
+            
+        } catch (IOException iOException) {
+        }
         
     }
 }
