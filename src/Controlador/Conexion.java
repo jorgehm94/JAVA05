@@ -39,6 +39,7 @@ public class Conexion {
             
         } catch (ClassNotFoundException classNotFoundException) {
         } catch (SQLException sQLException) {
+            System.out.println(sQLException.toString());
              throw new Errores(1);
         }
 
@@ -77,21 +78,32 @@ public class Conexion {
                 throw new Errores(1);
             }
          }catch(NullPointerException | SQLException | NumberFormatException ex)
-        {
-            throw new Errores(1);
-        }
+          {
+              System.out.println(ex.toString());
+              throw new Errores(1);
+          }
         
     }
     
 
     //Metodo para cerrar la conexion con la base de datos
-    public static void cerrarConexion() throws SQLException
+    public static void cerrarConexion() throws Errores
     {
+         try {
             //Cierra la conexion de la Base de Datos
             conexionPostgres.close();
             conexionMysql.close();
             System.out.println("Cerrada la conexion con la Base de Datos");
+        } catch (SQLException e) {
+             System.out.println(e.toString());
+             throw new Errores(1);
+        }
        
+    }
+    
+    public Connection devolverConexion()
+    {
+        return conexionPostgres;
     }
 }
 

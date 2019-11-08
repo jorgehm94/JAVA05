@@ -106,6 +106,7 @@ public class pedirDatos extends javax.swing.JDialog {
 
     private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
         dispose();
+        
     }//GEN-LAST:event_botonCancelarActionPerformed
 
     private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
@@ -114,19 +115,23 @@ public class pedirDatos extends javax.swing.JDialog {
         
         user =jTextField1.getText();
         pass = jPasswordField1.getText();
-        Conexion nueva = new Conexion();
         
-        try {
-            correcto=nueva.validarUsuario(user, pass);
-            
-            if (correcto){
-                JOptionPane.showMessageDialog(null, "Conexion realizada con exito", "Todo bien", JOptionPane.INFORMATION_MESSAGE);
-           }     
-        } catch (Errores ex) {
-            JOptionPane.showMessageDialog(null, "Conexion rechazada", "Error", JOptionPane.ERROR_MESSAGE);
-            ex.lanzarMensaje();
-        }
+        if(!user.equals("") && !pass.equals(""))
+        {
+            Conexion nueva = new Conexion();
 
+            try {
+                correcto=nueva.validarUsuario(user, pass);
+
+                if (correcto){
+                    JOptionPane.showMessageDialog(null, "Conexion realizada con exito", "Todo bien", JOptionPane.INFORMATION_MESSAGE);
+               }     
+            } catch (Errores ex) {
+                JOptionPane.showMessageDialog(null, "Conexion rechazada", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.lanzarMensaje();
+            }
+        }
+        
         dispose();
         
     }//GEN-LAST:event_botonAceptarActionPerformed

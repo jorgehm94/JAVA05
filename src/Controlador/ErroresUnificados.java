@@ -48,8 +48,10 @@ public class ErroresUnificados {
     public void mostrarMensajeError()
     {
         GregorianCalendar sistema = new GregorianCalendar();
+        String mensaje = obtenerMensaje(codError);
         System.out.println("Creando log "+cont+"...");
         System.out.println("" + sistema.get(Calendar.DAY_OF_MONTH) + "/" + (sistema.get(Calendar.MONTH) + 1) + "/" + sistema.get(Calendar.YEAR) + " Hora: " + sistema.get(Calendar.HOUR) +":" + sistema.get(Calendar.MINUTE));
+        System.out.println(mensaje);
     }
     
     public void generarLog()

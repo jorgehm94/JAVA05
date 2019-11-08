@@ -3,6 +3,7 @@ package Vista;
 
 import Controlador.Conexion;
 import Vista.VentanaPrincipal;
+import java.awt.Container;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -21,12 +22,12 @@ public class Principal {
         });
     }
     
-    public VentanaPrincipal devolverVentana()
+    public static VentanaPrincipal devolverVentana()
     {
         return prog;
     }
     
-    public void cambiarPanel(JPanel pane)
+    public static void cambiarPanel(JPanel pane)
     {
         prog.setContentPane(pane);
     }

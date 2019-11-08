@@ -3,11 +3,15 @@
 package Vista;
 
 import Controlador.Errores;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 /**
@@ -15,48 +19,40 @@ import javax.swing.UIManager;
  * @author JorgeHerrera
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
+    
+    private int codPina;
 
     public VentanaPrincipal() {
         initComponents();
-        
+       
         // Desactivo el usuario el cual está conectado
         labelUsuario.setEnabled(false);
         
         try{
             JFrame.setDefaultLookAndFeelDecorated(true);
             JDialog.setDefaultLookAndFeelDecorated(true);
-            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
             //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
             //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-          }
-          catch (Exception e)
-          {
-               e.printStackTrace();
-          }
-        
+            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+       
+        setTitle("Programa Gestion BD");
+        setIconImage(new ImageIcon("src/img/index.png").getImage());
         
         pedirDatos datos = new pedirDatos(this, true);
         
         datos.setVisible(true);
         
-        if(datos.estadoConexion())
-        {
-            itemCerrarr.setEnabled(true);
-            itemConexion.setEnabled(false);
-            String usuario = datos.devolverUserOPass(1);
-            labelUsuario.setEnabled(true);
-            labelUsuario.setText("PINACOTECA: "+usuario);
-            
-        }
-        else
-        {
-            labelUsuario.setEnabled(false);
-            itemCerrarr.setEnabled(false);
-            itemConexion.setEnabled(true);
-        }
- 
+        controlarConexion(datos.estadoConexion(), datos.devolverUserOPass(1));
+        guardarPinaco(datos.devolverUserOPass(1));
+        
     }
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -68,12 +64,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jMenuBar3 = new javax.swing.JMenuBar();
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
+        panelPrincipal = new javax.swing.JPanel();
         labelUsuario = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuSuperior = new javax.swing.JMenu();
         itemConexion = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        verGalerias = new javax.swing.JMenuItem();
         itemCerrarr = new javax.swing.JMenuItem();
+        itemAcercaDe = new javax.swing.JMenuItem();
 
         jMenu2.setText("File");
         jMenuBar2.add(jMenu2);
@@ -92,6 +90,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         labelUsuario.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         labelUsuario.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
+        javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
+        panelPrincipal.setLayout(panelPrincipalLayout);
+        panelPrincipalLayout.setHorizontalGroup(
+            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addGap(127, 127, 127)
+                .addComponent(labelUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(131, Short.MAX_VALUE))
+        );
+        panelPrincipalLayout.setVerticalGroup(
+            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                .addContainerGap(83, Short.MAX_VALUE)
+                .addComponent(labelUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(76, 76, 76))
+        );
+
         menuSuperior.setText("Menu");
 
         itemConexion.setText("Conexion");
@@ -102,8 +117,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         });
         menuSuperior.add(itemConexion);
 
-        jMenuItem2.setText("jMenuItem2");
-        menuSuperior.add(jMenuItem2);
+        verGalerias.setText("Ver Galerias");
+        verGalerias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verGaleriasActionPerformed(evt);
+            }
+        });
+        menuSuperior.add(verGalerias);
 
         itemCerrarr.setText("Cerrar Conexion");
         itemCerrarr.addActionListener(new java.awt.event.ActionListener() {
@@ -113,6 +133,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         });
         menuSuperior.add(itemCerrarr);
 
+        itemAcercaDe.setText("Acerca de");
+        itemAcercaDe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemAcercaDeActionPerformed(evt);
+            }
+        });
+        menuSuperior.add(itemAcercaDe);
+
         jMenuBar1.add(menuSuperior);
 
         setJMenuBar(jMenuBar1);
@@ -121,55 +149,101 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(105, 105, 105)
-                .addComponent(labelUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(130, Short.MAX_VALUE))
+            .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(55, 55, 55)
-                .addComponent(labelUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(122, Short.MAX_VALUE))
+            .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void guardarPinaco(String user)
+    {
+        try {
+            
+            codPina = Integer.parseInt(user);
+        } catch (NumberFormatException e) {}
+    }
+    
+    
     private void itemConexionActionPerformed(java.awt.event.ActionEvent evt){//GEN-FIRST:event_itemConexionActionPerformed
         
         pedirDatos datos = new pedirDatos(this, true);
         
         datos.setVisible(true);
         
-        if(datos.estadoConexion())
+        controlarConexion(datos.estadoConexion(), datos.devolverUserOPass(1));
+        guardarPinaco(datos.devolverUserOPass(1));
+        
+    }//GEN-LAST:event_itemConexionActionPerformed
+
+    
+    private void controlarConexion(boolean conex, String user)
+    {
+        if (conex)
         {
             itemCerrarr.setEnabled(true);
             itemConexion.setEnabled(false);
+            verGalerias.setEnabled(true);
             
-            String usuario = datos.devolverUserOPass(1);
             labelUsuario.setEnabled(true);
-            labelUsuario.setText("PINACOTECA: "+usuario);
+            labelUsuario.setText("PINACOTECA: "+user);
         }
         else
         {
-            labelUsuario.setEnabled(false);
+            labelUsuario.setEnabled(true);
+            labelUsuario.setText("NO CONECTADO");
             itemCerrarr.setEnabled(false);
+            verGalerias.setEnabled(false);
             itemConexion.setEnabled(true);
         }
-            
-    }//GEN-LAST:event_itemConexionActionPerformed
-
+        
+    }
+    
+    
     private void itemCerrarrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCerrarrActionPerformed
        labelUsuario.setEnabled(false);
        itemConexion.setEnabled(true);
        itemCerrarr.setEnabled(false);
+       
+       this.setContentPane(panelPrincipal);
+       controlarConexion(false, null);
+       
+       // Redimensionar un JFrame
+       this.pack();
+        
     }//GEN-LAST:event_itemCerrarrActionPerformed
 
+    private void verGaleriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verGaleriasActionPerformed
+        verGalerias nuevo = new verGalerias(codPina);
+        
+        this.setContentPane(nuevo);
+        this.pack();
+       
+    }//GEN-LAST:event_verGaleriasActionPerformed
+
+    private void itemAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemAcercaDeActionPerformed
+        
+        AcercaDe nuevo = new AcercaDe(this, true);
+        nuevo.setTitle("Version: 0.0.12");
+        nuevo.setVisible(true);
+    }//GEN-LAST:event_itemAcercaDeActionPerformed
+
+    private void desactivarPanel(JPanel nuevo)
+    {
+        nuevo.setVisible(false);
+    }
+    
+    private void activarPanel(JPanel nuevo)
+    {
+        nuevo.setVisible(true);
+    }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem itemAcercaDe;
     private javax.swing.JMenuItem itemCerrarr;
     private javax.swing.JMenuItem itemConexion;
     private javax.swing.JMenu jMenu2;
@@ -179,8 +253,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuBar jMenuBar3;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JLabel labelUsuario;
     private javax.swing.JMenu menuSuperior;
+    private javax.swing.JPanel panelPrincipal;
+    private javax.swing.JMenuItem verGalerias;
     // End of variables declaration//GEN-END:variables
 }
