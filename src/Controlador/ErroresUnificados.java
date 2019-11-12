@@ -38,7 +38,10 @@ public class ErroresUnificados {
                 
             case 3:
                 return "Error en el NIF";
-            
+                
+            case 4:
+                return "Error en los datos de galeria";
+                
             default:
                 return "Estas doramio";
         }

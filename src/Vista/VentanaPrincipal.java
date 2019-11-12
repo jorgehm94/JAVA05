@@ -2,15 +2,9 @@
 
 package Vista;
 
-import Controlador.Errores;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
@@ -31,9 +25,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         try{
             JFrame.setDefaultLookAndFeelDecorated(true);
             JDialog.setDefaultLookAndFeelDecorated(true);
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
             //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             //UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
         }
         catch (Exception e)
@@ -70,8 +64,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         menuSuperior = new javax.swing.JMenu();
         itemConexion = new javax.swing.JMenuItem();
         verGalerias = new javax.swing.JMenuItem();
+        itemNuevaGaleria = new javax.swing.JMenuItem();
         itemCerrarr = new javax.swing.JMenuItem();
         itemAcercaDe = new javax.swing.JMenuItem();
+        menuValidar = new javax.swing.JMenu();
 
         jMenu2.setText("File");
         jMenuBar2.add(jMenu2);
@@ -125,6 +121,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         });
         menuSuperior.add(verGalerias);
 
+        itemNuevaGaleria.setText("Nueva Galeria");
+        itemNuevaGaleria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemNuevaGaleriaActionPerformed(evt);
+            }
+        });
+        menuSuperior.add(itemNuevaGaleria);
+
         itemCerrarr.setText("Cerrar Conexion");
         itemCerrarr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -142,6 +146,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         menuSuperior.add(itemAcercaDe);
 
         jMenuBar1.add(menuSuperior);
+
+        menuValidar.setText("Validar NIF");
+        menuValidar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuValidarMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuValidar);
 
         setJMenuBar(jMenuBar1);
 
@@ -187,6 +199,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             itemCerrarr.setEnabled(true);
             itemConexion.setEnabled(false);
             verGalerias.setEnabled(true);
+            itemNuevaGaleria.setEnabled(true);
             
             labelUsuario.setEnabled(true);
             labelUsuario.setText("PINACOTECA: "+user);
@@ -198,6 +211,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             itemCerrarr.setEnabled(false);
             verGalerias.setEnabled(false);
             itemConexion.setEnabled(true);
+            itemNuevaGaleria.setEnabled(false);
         }
         
     }
@@ -231,6 +245,22 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         nuevo.setVisible(true);
     }//GEN-LAST:event_itemAcercaDeActionPerformed
 
+    private void itemNuevaGaleriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemNuevaGaleriaActionPerformed
+       
+        this.setContentPane(panelPrincipal);
+        this.pack();
+        NuevaGaleria nueva = new NuevaGaleria(this, true, codPina);
+        nueva.setTitle("Nueva galeria en pinacoteca "+ codPina);
+        nueva.setVisible(true);
+        
+    }//GEN-LAST:event_itemNuevaGaleriaActionPerformed
+
+    private void menuValidarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuValidarMouseClicked
+            validarNIF nuevo = new validarNIF(this, true);
+            nuevo.setTitle("Validar NIF");
+            nuevo.setVisible(true);
+    }//GEN-LAST:event_menuValidarMouseClicked
+
     private void desactivarPanel(JPanel nuevo)
     {
         nuevo.setVisible(false);
@@ -246,6 +276,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemAcercaDe;
     private javax.swing.JMenuItem itemCerrarr;
     private javax.swing.JMenuItem itemConexion;
+    private javax.swing.JMenuItem itemNuevaGaleria;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -255,6 +286,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar3;
     private javax.swing.JLabel labelUsuario;
     private javax.swing.JMenu menuSuperior;
+    private javax.swing.JMenu menuValidar;
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JMenuItem verGalerias;
     // End of variables declaration//GEN-END:variables

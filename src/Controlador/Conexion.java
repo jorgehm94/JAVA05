@@ -20,20 +20,20 @@ public class Conexion {
         //con la BD se crea un objeto tipo con
     public static Connection conexionPostgres;
     public static Connection conexionMysql;
-
+    private static String ip = "192.168.59.128";
     public static void crearConexion(String pass) throws Errores
     {
 
          try {
             Class.forName("org.postgresql.Driver");  //loads the driver
 
-            String url = "jdbc:postgresql://localhost:5432/PINACOTECA";
+            String url = "jdbc:postgresql://"+ip+":5432/PINACOTECA";
             
             conexionPostgres = DriverManager.getConnection(url, "jorge", pass);
             
             Class.forName("com.mysql.cj.jdbc.Driver");  //loads the driver
             
-            String urls = "jdbc:mysql://localhost:3306/PINACOTECA?useSSL=false";
+            String urls = "jdbc:mysql://"+ip+":3306/PINACOTECA?useSSL=false";
             
             conexionMysql = DriverManager.getConnection(urls, "jorge", pass);            
             

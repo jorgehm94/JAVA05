@@ -8,11 +8,19 @@ package Vista;
 import Controlador.Errores;
 import Modelo.ConsultasSQL;
 import java.awt.Image;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 
 
 /**
@@ -27,8 +35,7 @@ public class verGalerias extends javax.swing.JPanel {
     public verGalerias(int cod) {
         initComponents();
         
-        gestionConsultas.verDatos(cod);
-        
+        gestionConsultas.verDatosGaleria(cod);
         gestionConsultas.avanzar();
         actualizarDatos();
         controlBotones();
@@ -93,7 +100,18 @@ public class verGalerias extends javax.swing.JPanel {
             }
         });
 
+        jDatePicker1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jDatePicker1ActionPerformed(evt);
+            }
+        });
+
         verCuadros.setText("Ver cuadros de la galeria");
+        verCuadros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verCuadrosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -129,9 +147,9 @@ public class verGalerias extends javax.swing.JPanel {
                             .addComponent(labelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 551, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
+                        .addGap(21, 21, 21)
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(textCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cambiarFoto)
@@ -183,7 +201,53 @@ public class verGalerias extends javax.swing.JPanel {
 
     private void cambiarFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambiarFotoActionPerformed
         
+       JFileChooser imagenUsuario = new JFileChooser();
+       //Añadir filtro personalizado a filechooser
+       FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de imagen", "png", "jpg", "jpeg");
+       imagenUsuario.setFileFilter(filter);
+       imagenUsuario.addChoosableFileFilter(filter);
+       
+       // Desactivar todos los archivos del filtro del filechooser
+       imagenUsuario.setAcceptAllFileFilterUsed(false);
+       
+       int seleccion = imagenUsuario.showDialog(this, "Pillar imagen");
+       
+       if (seleccion == JFileChooser.APPROVE_OPTION)
+       {
+           File fichero = imagenUsuario.getSelectedFile();
+           String destino = "src/img/"+gestionConsultas.devolverDatoPinaco(1)+".jpg";
+           String origen = fichero.getPath();
+           
+           try {
+               Files.copy(Paths.get(origen), Paths.get(destino), REPLACE_EXISTING);
+               JOptionPane.showMessageDialog(this, "Imagen cambiada con exito", "Exito",JOptionPane.INFORMATION_MESSAGE);
+               actualizarDatos();
+           } catch (IOException ex) {
+           }
+
+       }
+       
+       
     }//GEN-LAST:event_cambiarFotoActionPerformed
+
+    private void jDatePicker1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDatePicker1ActionPerformed
+        
+        try {
+            GregorianCalendar fecha = new GregorianCalendar(jDatePicker1.getModel().getYear(), jDatePicker1.getModel().getMonth(), jDatePicker1.getModel().getDay());
+            comprobarFecha(fecha);
+        } catch (Errores ex) {
+            ex.lanzarMensaje();
+        }
+        
+    }//GEN-LAST:event_jDatePicker1ActionPerformed
+
+    private void verCuadrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verCuadrosActionPerformed
+        
+        DialogCuadros nuevo  = new DialogCuadros(Principal.devolverVentana(), true, gestionConsultas.devolverDatoPinaco(1));
+        nuevo.setTitle("Ver cuadros");
+        nuevo.setVisible(true);
+        
+    }//GEN-LAST:event_verCuadrosActionPerformed
 
     private void colocarFechaActual()
     {
@@ -192,42 +256,43 @@ public class verGalerias extends javax.swing.JPanel {
         jDatePicker1.getFormattedTextField().setText(""+fecha.get(Calendar.DAY_OF_MONTH)+"/"+(fecha.get(Calendar.MONTH)+1)+"/"+fecha.get(Calendar.YEAR));
         
     }
-    
-    
+   
     private void comprobarFecha(GregorianCalendar fecha) throws Errores
     {
         Date date = fecha.getTime();
         Date sistema = new Date();
         
-        if(date != sistema)
+        if(date != sistema){
+            colocarFechaActual();
+            JOptionPane.showMessageDialog(this, "No puedes modificar la fecha, para mas informacion examine el log", "Error de log",JOptionPane.OK_OPTION);
             throw new Errores(2);
-        
+            
+        }
         
     }
     
-    
+    // Metodo que actualiza los datos para los campos de textos e imagen
     private void actualizarDatos()
     { 
-        String url = "src/img/"+gestionConsultas.devolverDato(1)+".jpg";
+        String url = "src/img/"+gestionConsultas.devolverDatoPinaco(1)+".jpg";
         
         GregorianCalendar fecha = new GregorianCalendar();
         
         jDatePicker1.getFormattedTextField().setText(""+fecha.get(Calendar.DAY_OF_MONTH)+"/"+(fecha.get(Calendar.MONTH)+1)+"/"+fecha.get(Calendar.YEAR));
         
-      //  jDatePicker1.getComponent(1).setEnabled(false);
-                
         ImageIcon i = new ImageIcon(url);
         
         i = adaptarImagen(i);
 
         labelFoto.setIcon(i);
         
-        textCodigo.setText(""+gestionConsultas.devolverDato(1));
-        textDireccion.setText(""+gestionConsultas.devolverDato(2));
-        textGanancias.setText(""+gestionConsultas.devolverDato(4));
+        textCodigo.setText(""+gestionConsultas.devolverDatoPinaco(1));
+        textDireccion.setText(""+gestionConsultas.devolverDatoPinaco(2));
+        textGanancias.setText(""+gestionConsultas.devolverDatoPinaco(4));
         
     }
     
+    // Metodo que adapta la imagen recibida por parametro al tamaño del label de las fotos de galerias
     private ImageIcon adaptarImagen(ImageIcon i)
     {
         Image imagen = i.getImage();
