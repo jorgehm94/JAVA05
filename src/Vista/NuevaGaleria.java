@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -26,6 +24,7 @@ public class NuevaGaleria extends javax.swing.JDialog {
     private ConsultasSQL controlSQL = new ConsultasSQL();
     private File fichero;
     private int codGaleria;
+    
     public NuevaGaleria(java.awt.Frame parent, boolean modal, int codPina) {
         super(parent, modal);
         initComponents();
@@ -33,20 +32,21 @@ public class NuevaGaleria extends javax.swing.JDialog {
         actualizarDialog();
     }
 
- 
+    // Actualizar datos
     private void actualizarDialog()
     {
         ImageIcon def = new ImageIcon("src/img/default.png");
         def = adaptarImagen(def);
         labelFoto.setIcon(def);
         
-        // Campo de codigo de galeria, accedo a el a traver de una consulta
+        // Campo de codigo de galeria, accedo a el a traves de una consulta
         codGaleria = controlSQL.ultimoCodGaleria();
         codGaleria++;
         
         jTextField1.setText(""+codGaleria);
     }
     
+    // Ajusto la imagen a un determinado tamaño
     private ImageIcon adaptarImagen(ImageIcon i)
     {
         Image imagen = i.getImage();
@@ -170,6 +170,8 @@ public class NuevaGaleria extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    // El usuario elige una imagen, hasta que no le de a boton a aceptar no se guarda
     private void botonCambiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCambiarActionPerformed
          JFileChooser imagenUsuario = new JFileChooser();
        //Añadir filtro personalizado a filechooser
@@ -203,6 +205,8 @@ public class NuevaGaleria extends javax.swing.JDialog {
             ImageIcon as = (ImageIcon) labelFoto.getIcon();
             String origen;
             
+            // Si el fichero es null, es que no ha cambiado la foto
+            // Si por el contrario elige una, cojo su direccion de origen
             if(fichero == null)
                 origen = "src/img/default.png";
             else

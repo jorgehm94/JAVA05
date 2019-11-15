@@ -23,9 +23,10 @@ public class DialogAñadirCuadro extends javax.swing.JDialog {
         initComponents();
          this.gale=galeria;
         textGaleria.setText(""+gale);
+        
+        // Consulta para coger todos los autores y llenarlo en el comboBox
         gesCon.todosLosAutores();
         autores= gesCon.devolverAutores();
-        
         llenarCombo();
     }
 
@@ -147,7 +148,7 @@ public class DialogAñadirCuadro extends javax.swing.JDialog {
         int filas = gesCon.insertarCuadro(gale, codAutor, contadorC, nombreCuadro, valorNeto);
         
         if (filas > 0) {
-            
+            // Si la consulta funciona muestro un mensaje informativo
             JOptionPane.showMessageDialog(this, "Cuadro nuevo insertado", "Correcto", JOptionPane.INFORMATION_MESSAGE);
         }
         dispose();

@@ -1,9 +1,5 @@
-
-
 package Vista;
 
-import Controlador.GestionCuadros;
-import Modelo.Autor;
 import Modelo.ConsultasSQL;
 import Modelo.Cuadro;
 import java.util.ArrayList;
@@ -48,6 +44,9 @@ public class DialogCuadros extends javax.swing.JDialog {
             model.addColumn(column);
         }
       
+        // Si la consulta da mayor que 1, es que necesitamos un ArrayList
+        // Por el contrario solo devuelvo un objeto
+        
       if (gestionConsultas.cantidadCuadros()>1)
       {
           listaC = gestionConsultas.devolverArrayListCuadros();
@@ -162,6 +161,7 @@ public class DialogCuadros extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_botonCerrarActionPerformed
 
+    // Si hacemos click al JTable muestro los datos del autor a traves de un dialog
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         
        if(jTable1.getSelectedRow()!=-1)
@@ -179,13 +179,12 @@ public class DialogCuadros extends javax.swing.JDialog {
         DialogAñadirCuadro nuevo = new DialogAñadirCuadro(Principal.devolverVentana(), true, Integer.parseInt(galeriaSelec));
             nuevo.setTitle("Añadir cuadro en galeria "+galeriaSelec);
             nuevo.setVisible(true);
-            // Actualizar los datos para añadir solo filas en el jtable
+            
+            // Actualizar los datos para añadir  filas en el jtable y otra vez las columnas, por que en el metodo ya lo repito
             model.setColumnCount(0);
             model.setRowCount(0);
             llenarJtable();
-            
-            
-            
+
     }//GEN-LAST:event_botonAñadirActionPerformed
 
 

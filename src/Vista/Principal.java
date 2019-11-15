@@ -1,13 +1,9 @@
 package Vista;
 
 
-import Controlador.Conexion;
-import Vista.VentanaPrincipal;
-import java.awt.Container;
-import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+// Jorge Herrera
 
 public class Principal {
 

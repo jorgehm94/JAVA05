@@ -3,8 +3,6 @@ package Modelo;
 
 import Controlador.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 
@@ -12,6 +10,8 @@ import java.util.logging.Logger;
  *
  * @author Jorge Herrera
  */
+
+// Intermediario con las clases Gestion del controlador
 public class ConsultasSQL {
      
     private GestionGaleria galerias;

@@ -2,6 +2,8 @@
 
 package Vista;
 
+import Controlador.Conexion;
+import Controlador.Errores;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -35,12 +37,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             e.printStackTrace();
         }
        
+        // Añado un titulo y un icono al programa
         setTitle("Programa Gestion BD");
         setIconImage(new ImageIcon("src/img/index.png").getImage());
         
+        // Nada mas empezar pido los datos de la conexion
         pedirDatos datos = new pedirDatos(this, true);
         
         datos.setVisible(true);
+        
         
         controlarConexion(datos.estadoConexion(), datos.devolverUserOPass(1));
         guardarPinaco(datos.devolverUserOPass(1));
@@ -191,7 +196,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_itemConexionActionPerformed
 
-    
+    // Metodo que controla el estado de conexion con un booleano del Dialog pedirDatos y el usuario
     private void controlarConexion(boolean conex, String user)
     {
         if (conex)
@@ -222,7 +227,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
        itemConexion.setEnabled(true);
        itemCerrarr.setEnabled(false);
        
+        try {
+            Conexion.cerrarConexion();
+        } catch (Errores ex) {
+            ex.lanzarMensaje();
+        }
+       
        this.setContentPane(panelPrincipal);
+       // Vuelvo a llamar a controlar conexion, con el booleano en false (no hay conexion) y el string en null(no es importante)
        controlarConexion(false, null);
        
        // Redimensionar un JFrame
